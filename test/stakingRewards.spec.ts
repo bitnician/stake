@@ -149,7 +149,7 @@ describe("Staking Rewards", function () {
 
       // mint ppt to the staker1
       const stakeAmount = expandTo18Decimals(2);
-      await stakingRewards.connect(owner).mint(staker1.address, stakeAmount);
+      await stakingRewards.connect(minter).mint(staker1.address, stakeAmount);
 
       // fast-forward ~1/3 through the reward window
       await mineBlock(startTime.add(endTime.sub(startTime).div(3)).toNumber());
@@ -164,7 +164,7 @@ describe("Staking Rewards", function () {
 
       // mint ppt to the staker1
       const stakeAmount = expandTo18Decimals(2);
-      await stakingRewards.connect(owner).mint(staker1.address, stakeAmount);
+      await stakingRewards.connect(minter).mint(staker1.address, stakeAmount);
 
       // fast-forward ~1/3 through the reward window
       await mineBlock(startTime.add(endTime.sub(startTime).div(3)).toNumber());
@@ -176,7 +176,7 @@ describe("Staking Rewards", function () {
         .be.true;
 
       // mint ppt to the staker2
-      await stakingRewards.connect(owner).mint(staker2.address, stakeAmount);
+      await stakingRewards.connect(minter).mint(staker2.address, stakeAmount);
 
       // fast-forward ~2/3 through the reward window
       const currentTime = BigNumber.from(
@@ -195,7 +195,7 @@ describe("Staking Rewards", function () {
 
       // mint ppt to the staker3
       const staker3 = owner;
-      await stakingRewards.connect(owner).mint(staker3.address, stakeAmount);
+      await stakingRewards.connect(minter).mint(staker3.address, stakeAmount);
 
       // fast-forward past the reward window
       await mineBlock(endTime.add(1).toNumber());
@@ -229,7 +229,7 @@ describe("Staking Rewards", function () {
       const stakeAmount = expandTo18Decimals(2);
 
       // mint ppt to the staker1
-      await stakingRewards.connect(owner).mint(staker1.address, stakeAmount);
+      await stakingRewards.connect(minter).mint(staker1.address, stakeAmount);
       const stakeStartTime: BigNumber = await stakingRewards.lastUpdateTime();
 
       // fast-forward past the reward window
