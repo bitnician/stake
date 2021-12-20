@@ -21,6 +21,8 @@ describe("Staking Rewards", function () {
   const reward = expandTo18Decimals(100);
   const minterRole = ethers.utils.id("MINTER_ROLE");
   const rewardDistributionRole = ethers.utils.id("REWARD_DISTRIBUTION_ROLE");
+  const defaultAdminRole =
+    "0x0000000000000000000000000000000000000000000000000000000000000000";
 
   before(async () => {
     provider = ethers.provider;
@@ -102,6 +104,32 @@ describe("Staking Rewards", function () {
         stakingRewards.connect(staker1).mint(owner.address, 1)
       ).revertedWith(
         `AccessControl: account ${staker1.address.toLowerCase()} is missing role ${minterRole}`
+      );
+    });
+
+    it("only set RewardsDuration by admin", async () => {
+      // the rewardsDuration is set by notifyRewardAmount(), but it can be increased after previous rewards period is completed
+
+      // fail - non owner
+      await expect(
+        stakingRewards.connect(staker1).setRewardsDuration(10)
+      ).revertedWith(
+        `AccessControl: account ${staker1.address.toLowerCase()} is missing role ${defaultAdminRole}`
+      );
+
+      const oneDay = 86400;
+      // success - owner
+      await expect(stakingRewards.connect(owner).setRewardsDuration(oneDay))
+        .to.emit(stakingRewards, "RewardsDurationUpdated")
+        .withArgs(oneDay);
+      expect(await stakingRewards.rewardsDuration()).to.be.eq(oneDay);
+
+      // fail - period finish is not yet completed
+      await stakingRewards.connect(rewardsDistribution).notifyRewardAmount(1);
+      await expect(
+        stakingRewards.connect(owner).setRewardsDuration(10)
+      ).revertedWith(
+        `Previous rewards period must be complete before changing the duration for the new period`
       );
     });
   });
