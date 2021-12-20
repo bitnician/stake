@@ -3,7 +3,6 @@ import hre, { ethers } from "hardhat";
 import "@nomiclabs/hardhat-ethers";
 import { getSigner } from "./utils/getSigner";
 import { StakingRewards } from "../typechain-types";
-// eslint-disable-next-line node/no-extraneous-import
 import { BigNumber } from "ethers";
 
 async function main() {

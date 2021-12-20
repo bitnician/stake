@@ -173,7 +173,7 @@ describe("Staking Rewards", function () {
 
       // eslint-disable-next-line no-unused-expressions
       expect(reward.div(3).sub(staker1Earned).lte(reward.div(3).div(10000))).to
-        .be.true;
+        .be.true; // ensure result is within .01%
 
       // mint ppt to the staker2
       await stakingRewards.connect(minter).mint(staker2.address, stakeAmount);
@@ -218,7 +218,7 @@ describe("Staking Rewards", function () {
           .div(18)
           .sub(staker2Earned)
           .lte(reward.mul(5).div(18).div(10000))
-      ); // ~33% of 1/3
+      ); // (50% of 1/3) + (33% of 1/3)
       expect(reward.div(9).sub(staker3Earned).lte(reward.div(9).div(10000))); // ~33% of 1/3
     });
   });
